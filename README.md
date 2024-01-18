@@ -4,6 +4,7 @@ This is a simple script that makes you in control of the investment of SP500. As
 The recommendations assumes the ability to buy fractional stocks (e.g. to buy 0.25 of apple stock). Fractional buying is supported in most of the trading apps I saw, however, selling them is a bit tricky (read about that if you think it's a risk for you). If you prefer whole stocks, there is an input "non_fractional_stocks" use it.
 
 Example usage:
+
 For fractional stocks
 
 --capital 100000 --api_key_path api_key.txt
