@@ -2,12 +2,14 @@ import requests
 import parser
 import time
 import pandas as pd
+import argparse
 
 SP500_HOLDINGS_URL = "https://stockanalysis.com/etf/spus/holdings/"
+API_KEY = ""
 
 
-def compute_allocation(df, cap, fractions):
-    if not fractions:
+def compute_allocation(df, cap, whole_stocks):
+    if whole_stocks:
         allocated = 0
         for index, row in df.iterrows():
             weight = 0.01 * row["Weight"]
@@ -18,7 +20,7 @@ def compute_allocation(df, cap, fractions):
             current_stocks = int(current_quota / price)
             allocated += (current_stocks * price)
             print(row["Symbol"], current_stocks)
-        print("capital left over = ", cap-allocated)
+        print("capital left over = ", cap - allocated)
     else:
         allocated = 0
         for index, row in df.iterrows():
@@ -29,7 +31,7 @@ def compute_allocation(df, cap, fractions):
             current_quota = cap * weight
             print(row["Symbol"], current_quota)
             allocated += current_quota
-        print("capital left over = ", cap-allocated)
+        print("capital left over = ", cap - allocated)
 
 
 def mark_boycott(symbol, boycott_list):
@@ -39,7 +41,7 @@ def mark_boycott(symbol, boycott_list):
         return False
 
 
-def get_stock_prices(API_KEY, symbol):
+def get_stock_prices(symbol):
     time.sleep(2)
     base_url = "https://www.alphavantage.co/query"
     function = "TIME_SERIES_INTRADAY"
@@ -72,6 +74,7 @@ def parse_arguments():
 
     parser.add_argument('--capital', type=float, help='Capital (float)', default=1000)
     parser.add_argument('--api_key_path', type=str, help='Path to api_key.txt file', default="api_key.txt")
+    parser.add_argument('--non_fractional_stocks', action='store_true', default=False, help='Specify if the input is fake')
 
     args = parser.parse_args()
     return args
@@ -87,7 +90,7 @@ def main():
     boycott = pd.read_csv("blacklist.csv")
     holdings['to_boycott'] = holdings['Symbol'].apply(lambda x: mark_boycott(x, list(boycott['Symbol'])))
     holdings.drop(holdings[holdings['to_boycott'] == True].index, inplace=True)
-    holdings['price'] = holdings['Symbol'].apply(API_KEY, get_stock_prices)
+    holdings['price'] = holdings['Symbol'].apply(get_stock_prices)
     # saving the prices as the free API has a quota of 25 request/day
     holdings.to_csv("holdings.csv")
     holdings = pd.read_csv("holdings.csv")
@@ -97,7 +100,7 @@ def main():
     # re weighting
     holdings['Weight'] = holdings['Weight'] / holdings['Weight'].sum() * 100
     # fractions = True, assumes you can buy a fraction of a stock (this is allowed in most cases)
-    compute_allocation(holdings, arg.capital, fractions=True)
+    compute_allocation(holdings, args.capital, whole_stocks=args.non_fractional_stocks)
 
 
 if __name__ == "__main__":
