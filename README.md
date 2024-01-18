@@ -5,7 +5,9 @@ The recommendations assumes the ability to buy fractional stocks (e.g. to buy 0.
 
 Example usage:
 For fractional stocks
+
 --capital 100000 --api_key_path api_key.txt
 
 For whole stockes
+
 --capital 100000 --api_key_path api_key.txt --non_fractional_stocks
