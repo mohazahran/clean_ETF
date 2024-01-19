@@ -12,7 +12,9 @@ For fractional stocks
 This will gives you the captial ($) to invest in each stock. for example:
 
 MSFT investment $:  19957.84695201038
+
 AAPL investment $:  19649.80544747082
+
 NVDA investment $:  8819.714656290533
 
 
@@ -24,7 +26,9 @@ For whole stockes
 This will gives you the the number of stocks. for example:
 
 MSFT #stocks:  53
+
 AAPL #stocks:  106
+
 NVDA #stocks:  16
 
 
