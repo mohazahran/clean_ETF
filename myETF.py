@@ -19,7 +19,7 @@ def compute_allocation(df, cap, whole_stocks):
             current_quota = cap * weight
             current_stocks = int(current_quota / price)
             allocated += (current_stocks * price)
-            print(row["Symbol"], current_stocks)
+            print(row["Symbol"], "#stocks: ", current_stocks)
         print("capital left over = ", cap - allocated)
     else:
         allocated = 0
@@ -29,7 +29,7 @@ def compute_allocation(df, cap, whole_stocks):
             if price == 0:
                 continue
             current_quota = cap * weight
-            print(row["Symbol"], current_quota)
+            print(row["Symbol"], "investment $: ", current_quota)
             allocated += current_quota
         print("capital left over = ", cap - allocated)
 
